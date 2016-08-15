@@ -10,11 +10,11 @@ class Loader
             require_once($plugin_dir . 'classes/Shortcodes/Contest.php');
         }
 
-        \add_action('init', [$this, 'registerContestCPT']);
-        \add_action('init', [$this, 'registerTeamCPT']);
+        \add_action('init', [$this, 'registerContestsCPT']);
+        \add_action('init', [$this, 'registerContestantsCPT']);
     }
 
-    public function registerContestCPT()
+    public function registerContestsCPT()
     {
         \register_post_type('cf1971_contests', [
             'labels' => [
@@ -28,7 +28,7 @@ class Loader
         ]);
     }
 
-    public function registerTeamCPT()
+    public function registerContestantsCPT()
     {
         \register_post_type('cf1971_contestants', [
             'labels' => [
