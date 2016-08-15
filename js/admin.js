@@ -1,17 +1,37 @@
 (function ($) {
   $(document).ready(function () {
-    $('.cf1971-workouts-list').sortable();
-    $('.cf1971-workout-add').on('click', function () {
-      // Create new elements
-      var $input = $('input').attr('type', 'hidden').val($('input[name="cf1971-workout-new"]').val());
-      var $li = $('li').html('<label>' + $input.val() + '</label>');
-      $li.append($input);
 
-      // Append to workout list
-      $('.cf1971-workouts-list').append($li);
-      
-      // Clear the input value
+    // Delete button helper function
+    var deleteButton = function () {
+      return '[<a class="cf1971-workout-delete" href="javascript:;">&times;</a>]';
+    };
+
+    // Make Workouts List sortable
+    $('.cf1971-workouts-list').sortable();
+
+    // Add new Workout to list
+    $('.cf1971-admin-workouts').on('click', '.cf1971-workout-add', function (e) {
+      e.preventDefault();
+
+      var val = $('input[name="cf1971-workout-new"]').val();
+
+      $('.cf1971-workouts-list').append('<li>' +
+          '<input type="hidden" value="' + val + '" name="workouts[]"> ' +
+          '<label>' + val + '</label> ' +
+          deleteButton() +
+        '</li>');
+
       $('input[name="cf1971-workout-new"]').val('');
     });
+
+    // Remove workout form list
+    $('.cf1971-admin-workouts').on('click', '.cf1971-workout-delete', function (e) {
+      var proceed = window.confirm("Are you sure you want to delete this Workout?");
+
+      if (proceed) {
+        $(this).closest('li').remove();
+      }
+    });
+
   });
 })(jQuery);

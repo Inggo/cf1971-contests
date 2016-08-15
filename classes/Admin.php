@@ -36,6 +36,7 @@ class Admin
         ?>
 
         <div class="cf1971-admin-workouts">
+            <p>Publish or Update this Contest before editing the leaderboards below.</p>
             <ul class="cf1971-workouts-list">
                 
             </ul>

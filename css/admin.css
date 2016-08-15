@@ -1,0 +1,13 @@
+.cf1971-workout-delete {
+    font-size: .8;
+    text-decoration: none;
+    color: red;
+}
+
+.cf1971-workouts-list li {
+    font-size: 1.2em;
+    padding: 5px;
+    border: 1px solid darkgray;
+    cursor: move;
+    background: white;
+}
