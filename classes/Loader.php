@@ -16,6 +16,9 @@ class Loader
 
         \add_action('init', [$this, 'registerContestsCPT']);
         \add_action('init', [$this, 'registerContestantsCPT']);
+
+        $this->admin = new Admin;
+        $this->shortcodes[] = new Shortcodes\Contest;
     }
 
     public function registerContestsCPT()
