@@ -13,5 +13,21 @@ class Loader
         if (!class_exists('Inggo\CF1971\Contests\Shortcodes\Contest')) {
             require_once($plugin_dir . 'classes/Shortcodes/Contest.php');
         }
+
+        \add_action('init', [$this, 'registerContestCPT']);
+    }
+
+    public function registerContestCPT()
+    {
+        \register_post_type('contests', [
+            'labels' => [
+                'name' => \__('Contests', 'cf1971-contests'),
+                'singular_name' => \__('Contest', 'cf1971-contests'),
+            ],
+            'public' => true,
+            'has_archive' => false,
+            'capability_type' => 'page',
+            'supports' => ['title', 'editor', 'thumbnail', 'revisions', 'custom-fields'],
+        ]);
     }
 }
