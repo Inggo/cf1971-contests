@@ -9,3 +9,12 @@
  * License: GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
+
+define('CF1971_CONTESTS_DIR', plugin_dir_path(__FILE__));
+define('CF1971_CONTESTS_URL', plugin_dir_url(__FILE__));
+
+if (!class_exists('Inggo\CF1971\Contests\Loader')) {
+    require_once(CF1971_CONTESTS_DIR . 'classes/Loader.php');
+}
+
+new Inggo\CF1971\Contests\Loader(CF1971_CONTESTS_DIR);
