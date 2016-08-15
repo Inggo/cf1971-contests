@@ -12,6 +12,7 @@
 
 define('CF1971_CONTESTS_DIR', plugin_dir_path(__FILE__));
 define('CF1971_CONTESTS_URL', plugin_dir_url(__FILE__));
+define('CF1971_CONTEST_VERSION', '0.1.0');
 
 if (!class_exists('Inggo\CF1971\Contests\Loader')) {
     require_once(CF1971_CONTESTS_DIR . 'classes/Loader.php');

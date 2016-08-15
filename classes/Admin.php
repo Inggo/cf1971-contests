@@ -4,10 +4,25 @@ namespace Inggo\CF1971\Contests;
 
 class Admin
 {
-    public function __construct($plugin_dir)
+    public function __construct()
     {
         \add_action('add_meta_boxes', [$this, 'addMetaBoxes']);
         \add_action('save_post', [$this, 'saveMetaData'], 10, 3);
+        \add_action('admin_print_scripts-post-new.php', [$this, 'enqueueScripts']);
+        \add_action('admin_print_scripts-post.php', [$this, 'enqueueScripts']);
+    }
+
+    public function enqueueScripts($hook)
+    {
+        \wp_register_script('cf1971-contests-admin', CF1971_CONTESTS_URL . 'js/admin.js', ['jquery'], CF1971_CONTEST_VERSION, true);
+        \wp_register_style('cf1971-contests-admin', CF1971_CONTESTS_URL . 'css/admin.css', [], CF1971_CONTEST_VERSION, true);
+
+        global $post_type;
+
+        if ($post_type === 'cf1971_contests' || $post_type === 'cf1971_contestants') {
+            \wp_enqueue_script('cf1971-contests-admin');
+            \wp_enqueue_style('cf1971-contests-admin');
+        }
     }
 
     public function addMetaBoxes()
@@ -24,7 +39,10 @@ class Admin
             <ul class="cf1971-workouts-list">
                 
             </ul>
-            <input type="text" name="cf1971-workout-new"> <button class="cf1971-workout-add">Add Workout</button>
+            <div class="cf1971-workouts-create">
+                <input type="text" name="cf1971-workout-new" placeholder="Workout Name">
+                <button class="cf1971-workout-add" type="button">Add Workout</button>
+            </div>
         </div>
 
         <?php
@@ -37,6 +55,6 @@ class Admin
 
     private function saveWorkoutsMetaData($post_id, $post, $update)
     {
-        
+
     }
 }
