@@ -65,7 +65,7 @@ class Admin
         switch ($this->settings[$setting]) {
             case 'checkbox':
             ?>
-                <input type="checkbox" <?= $this->settingsCommonAttr($setting); ?> <?=
+                <input type="checkbox" <?= $this->settingsCommonAttr($setting); ?> value="1" <?=
                     \get_post_meta($object->ID, 'cf1971_contests.' . $setting, true) ? 'checked' : '';
                 ?>>
             <?php
@@ -90,6 +90,7 @@ class Admin
 
     private function settingsCommonPre($setting)
     {
+        \wp_nonce_field('cf1971_contests_settings_meta', 'cf1971_contests_settings_meta_nonce');
         ?>
         <div class="cf1971-admin-settings-field cf1971-admin-settings-<?= $setting; ?>">
             <label class="cf1971-admin-settings-label" for="cf1971-settings-<?= $setting; ?>"><?=
@@ -137,6 +138,7 @@ class Admin
         ?>
 
         <div class="cf1971-admin-leaderboards">
+            <p>Make sure the Workouts above are populated and finalised.</p>
             <div class="cf1971-team-create">
                 <input type="text" name="cf1971-workout-new" placeholder="Team Name">
                 <button class="cf1971-workout-add" type="button">Add Team</button>
@@ -148,17 +150,54 @@ class Admin
 
     public function saveMetaData($post_id, $post, $update)
     {
-        $this->saveWorkoutsMetaData($post_id, $post, $update);
-        $this->saveLeaderboardsMetaData($post_id, $post, $update);
+        $this->saveSettingsData($post_id, $post, $update);
+        $this->saveWorkoutsData($post_id, $post, $update);
+        $this->saveLeaderboardsData($post_id, $post, $update);
     }
 
-    private function saveWorkoutsMetaData($post_id, $post, $update)
+    private function saveSettingsData($post_id, $post, $update)
     {
+        if (!$this->savePreChecks($post_id, $post, 'settings')) {
+            return $post_id;
+        }
 
+        $show_form = isset($_POST['show_form']) && intval($_POST['show_form']) === 1;
+        $show_leaderboards = isset($_POST['show_leaderboards']) && intval($_POST['show_leaderboards']) === 1;
+        $paypal_email = isset($_POST['paypal_email']) ? \sanitize_email($_POST['paypal_email']) : '';
+
+        \update_post_meta($post_id, 'cf1971_contests.show_form', $show_form);
+        \update_post_meta($post_id, 'cf1971_contests.show_leaderboards', $show_leaderboards);
+        \update_post_meta($post_id, 'cf1971_contests.paypal_email', $paypal_email);
     }
 
-    private function saveLeaderboardsMetaData($post_id, $post, $update)
+    private function saveWorkoutsData($post_id, $post, $update)
+    {
+        if (!$this->savePreChecks($post_id, $post, 'workouts')) {
+            return $post_id;
+        }
+    }
+
+    private function saveLeaderboardsData($post_id, $post, $update)
+    {
+        if (!$this->savePreChecks($post_id, $post, 'leaderboards')) {
+            return $post_id;
+        }
+    }
+
+    private function savePreChecks($post_id, $post, $box)
     {
 
+        if (!isset($_POST['cf1971_contests_' . $box . '_meta_nonce']) ||
+                !\wp_verify_nonce($_POST['cf1971_contests_' . $box . '_meta_nonce'], 'cf1971_contests_' . $box . '_meta')) {
+            return false;
+        }
+
+        $post_type = \get_post_type_object($post->post_type);
+
+        if (!\current_user_can($post_type->cap->edit_post, $post_id)) {
+            return false;
+        }
+
+        return true;
     }
 }
