@@ -125,9 +125,6 @@ class Contest
                 <input type="hidden" name="currency_code" value="<?= $this->getSetting('paypal_currency') ?: $this->default_currency; ?>">
                 <input type="hidden" name="amount" value="<?= $this->getSetting('paypal_amount') ?: $this->default_value; ?>">
                 <input type="hidden" name="item_name" value="Registration for <?= \esc_attr(\get_the_title()) ?>">
-                <input type="hidden" name="<first_name>" value="">
-                <input type="hidden" name="<last_name>" value="">
-                <input type="hidden" name="<email>" value="">
             </form>
             <?php endif; ?>
         </div>

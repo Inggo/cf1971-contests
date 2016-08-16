@@ -26,13 +26,16 @@ class FormProcessor
         }
 
         $message = 'Your registration has been submitted.';
+        $redirect = false;
 
         if ($this->getSetting('paypal_email')) {
             $message .=  'You will now be redirected to PayPal shortly.';
+            $redirect = true;
         }
 
         return $this->respond([
             'success' => $message,
+            'redirect' => $redirect
         ]);
     }
 
@@ -75,6 +78,12 @@ class FormProcessor
         if (!is_email($_POST['email_address'])) {
             return $this->respondError('Please enter a valid email address.');
         }
+
+        global $post;
+
+        $post = $this->contest;
+
+        setup_postdata($post);
 
         $this->first_name = \sanitize_text_field($_POST['first_name']);
         $this->last_name = \sanitize_text_field($_POST['last_name']);
