@@ -27,12 +27,13 @@ class Admin
 
     public function addMetaBoxes()
     {
-        \add_meta_box('cf1971-contests-meta-box', 'Workouts', [$this, 'workoutsMetaBox'], 'cf1971_contests');
+        \add_meta_box('cf1971-contests-workouts-meta', 'Workouts', [$this, 'workoutsMetaBox'], 'cf1971_contests');
+        \add_meta_box('cf1971-contests-leaderboards-meta', 'Leaderboards', [$this, 'leaderboardsMetaBox'], 'cf1971_contests');
     }
 
     public function workoutsMetaBox($object)
     {
-        \wp_nonce_field('cf1971-contests-meta', 'cf1971_contests_meta_nonce');
+        \wp_nonce_field('cf1971_contests_workouts_meta', 'cf1971_contests_workouts_meta_nonce');
         ?>
 
         <div class="cf1971-admin-workouts">
@@ -49,12 +50,36 @@ class Admin
         <?php
     }
 
+    public function leaderboardsMetaBox($object)
+    {
+        \wp_nonce_field('cf1971_contests_leaderboards_meta', 'cf1971_contests_leaderboards_meta_nonce');
+        ?>
+
+        <div class="cf1971-admin-workouts">
+            <ul class="cf1971-workouts-list">
+                
+            </ul>
+            <div class="cf1971-workouts-create">
+                <input type="text" name="cf1971-workout-new" placeholder="Team Name">
+                <button class="cf1971-workout-add" type="button">Add Team</button>
+            </div>
+        </div>
+
+        <?php
+    }
+
     public function saveMetaData($post_id, $post, $update)
     {
         $this->saveWorkoutsMetaData($post_id, $post, $update);
+        $this->saveLeaderboardsMetaData($post_id, $post, $update);
     }
 
     private function saveWorkoutsMetaData($post_id, $post, $update)
+    {
+
+    }
+
+    private function saveLeaderboardsMetaData($post_id, $post, $update)
     {
 
     }
