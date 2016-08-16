@@ -239,7 +239,7 @@ class Admin
                         <td>
                             <input class="cf1971-team-score" placeholder="Enter Score" type="text" name="team_scores[<?=
                                 $j;
-                            ?>][]" value="<?= $this->getTeamScores()[$j][$i] ?>">
+                            ?>][]" value="<?= @$this->getTeamScores()[$j][$i] ?>">
                         </td>
                         <?php endforeach; ?>
                         <td>

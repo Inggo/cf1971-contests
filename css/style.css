@@ -49,6 +49,51 @@
     color: red;
 }
 
-.leaderboard-container {
-    overflow: scroll;
+.cf1971-leaderboard-container {
+    border-left: 1px solid rgb(229, 229, 229);
+    border-right: 1px solid rgb(229, 229, 229);;
+    overflow-x: scroll;
+}
+
+.cf1971-leaderboard-container table {
+    border-left: none;
+    border-right: none;
+    width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+    .cf1971-contest-container {
+        overflow: hidden;
+        position: relative;
+    }
+
+    .cf1971-contest-info {
+        width: 60%;
+        float: left;
+        margin: 36px 0;
+        border-right: 1px solid rgb(229, 229, 229);
+    }
+
+    .cf1971-contest-form {
+        float: left;
+        width: 40%;
+        margin: 36px 0;
+        padding-left: 24px;
+    }
+
+    .cf1971-contest-title {
+        padding-right: 24px;
+    }
+
+    .cf1971-contest-logo {
+        padding-right: 24px;
+    }
+
+    .cf1971-contest-contents {
+        padding-right: 24px;
+    }
+
+    .cf1971-leaderboard-container {
+        overflow-x: auto;
+    }
 }
