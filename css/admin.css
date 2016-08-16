@@ -49,3 +49,8 @@
 .cf1971-team-score {
     max-width: 100px;
 }
+
+#cf1971_id {
+    width: 50px;
+    text-align: center;
+}

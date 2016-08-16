@@ -39,13 +39,10 @@ class Loader
                 'not_found_in_trash' => \__('No contests found in Trash', 'cf1971-contests'),
                 'all_items'          => \__('All Contests', 'cf1971-contests'),
             ],
-            'public' => true,
-            'has_archive' => false,
+            'public' => false,
+            'show_ui' => true,
             'capability_type' => 'page',
             'supports' => ['title', 'editor', 'thumbnail', 'revisions'],
-            'rewrite' => [
-                'slug' => 'contests',
-            ],
         ]);
     }
 }

@@ -28,11 +28,56 @@ class Admin
         \add_action('save_post', [$this, 'saveMetaData'], 10, 3);
         \add_action('admin_print_scripts-post-new.php', [$this, 'enqueueScripts']);
         \add_action('admin_print_scripts-post.php', [$this, 'enqueueScripts']);
+        \add_action('admin_print_scripts', [$this, 'enqueueScripts']);
+
+        \add_filter('manage_cf1971_contests_posts_columns', [$this, 'addColumn']);
+        \add_filter('manage_edit-cf1971_contests_sortable_columns', [$this, 'addSortableColumn']);
+        \add_action('manage_cf1971_contests_posts_custom_column', [$this, 'addColumnContent'], 10, 2);
+    }
+
+    private function insertBeforeKey($originalArray, $originalKey, $insertKey, $insertValue)
+    {
+        $newArray = [];
+        $inserted = false;
+
+        foreach ($originalArray as $key => $value) {
+            if (!$inserted && $key === $originalKey) {
+                $newArray[$insertKey] = $insertValue;
+                $inserted = true;
+            }
+            $newArray[$key] = $value;
+        }
+        return $newArray;
+    }
+
+    public function addColumn($columns)
+    {
+        $columns = $this->insertBeforeKey($columns, 'title', 'cf1971_id', __('ID', 'cf1971-contests'));
+        $columns = $this->insertBeforeKey($columns, 'date', 'cf1971_shortcode', __('Shortcode', 'cf1971-contests'));
+        return $columns;
+    }
+
+    public function addSortableColumn($columns)
+    {
+        $columns['cf1971_id'] = 'cf1971_id';
+        return $columns;
+    }
+
+    public function addColumnContent($column_name, $post_id)
+    {
+        if ($column_name === 'cf1971_id') {
+            echo $post_id;
+        }
+
+        if ($column_name === 'cf1971_shortcode') {
+            echo '<code>[cf1971_contest id="' . $post_id . '"]</code>';
+        }
     }
 
     public function enqueueScripts($hook)
     {
         \wp_register_script('cf1971-contests-admin', CF1971_CONTESTS_URL . 'js/admin.js', ['jquery', 'jquery-ui-sortable'], CF1971_CONTEST_VERSION, true);
+        \wp_register_script('cf1971-contests-admin', CF1971_CONTESTS_URL . 'js/admin-page.js', ['jquery'], CF1971_CONTEST_VERSION, true);
         \wp_register_style('cf1971-contests-admin', CF1971_CONTESTS_URL . 'css/admin.css', [], CF1971_CONTEST_VERSION);
 
         \wp_localize_script('cf1971-contests-admin', 'cf1971_admin', [
@@ -41,7 +86,7 @@ class Admin
 
         global $post_type;
 
-        if ($post_type === 'cf1971_contests' || $post_type === 'cf1971_contestants') {
+        if ($post_type === 'cf1971_contests') {
             \wp_enqueue_script('cf1971-contests-admin');
             \wp_enqueue_style('cf1971-contests-admin');
         }
