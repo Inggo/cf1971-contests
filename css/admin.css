@@ -1,4 +1,4 @@
-.cf1971-workout-delete {
+.cf1971-delete {
     font-size: .8;
     text-decoration: none;
     color: red;
@@ -12,6 +12,23 @@
     background: white;
 }
 
+.cf1971-leaderboards {
+    border-spacing: 0;
+    margin: 0 0 20px;
+}
+
+.cf1971-leaderboards-body tr {
+    background: white;
+    font-size: 1.2em;
+    cursor: move;
+}
+
+.cf1971-leaderboards th,
+.cf1971-leaderboards-body td {
+    padding: 5px;
+    border-bottom: 1px solid darkgray;
+}
+
 .cf1971-admin-settings-field {
     padding: 5px 5px 5px 160px;
 }
@@ -23,4 +40,8 @@
 
 .cf1971-admin-settings-control input[type="email"] {
     width: 100%;
+}
+
+.cf1971-team-score {
+    max-width: 100px;
 }

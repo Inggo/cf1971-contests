@@ -16,6 +16,10 @@ class Admin
         'paypal_email' => 'PayPal Email Address',
     ];
 
+    private $workouts = null;
+    private $teams = null;
+    private $team_scores = null;
+
     public function __construct()
     {
         \add_action('add_meta_boxes', [$this, 'addMetaBoxes']);
@@ -28,6 +32,10 @@ class Admin
     {
         \wp_register_script('cf1971-contests-admin', CF1971_CONTESTS_URL . 'js/admin.js', ['jquery', 'jquery-ui-sortable'], CF1971_CONTEST_VERSION, true);
         \wp_register_style('cf1971-contests-admin', CF1971_CONTESTS_URL . 'css/admin.css', [], CF1971_CONTEST_VERSION);
+
+        \wp_localize_script('cf1971-contests-admin', 'cf1971_admin', [
+            'workouts' => $this->getWorkouts(),
+        ]);
 
         global $post_type;
 
@@ -113,23 +121,61 @@ class Admin
         return ' id="cf1971-settings-' . \esc_attr($setting) . '" name="' . \esc_attr($setting) . '" ';
     }
 
+    private function getWorkouts()
+    {
+        if (is_array($this->workouts)) {
+            return $this->workouts;
+        }
+
+        global $post;
+
+        $workouts_meta = \get_post_meta($post->ID, 'cf1971_contests.workouts', true);
+        $this->workouts = $workouts_meta ? json_decode($workouts_meta) : [];
+
+        return $this->workouts;
+    }
+
+    private function getTeams()
+    {
+        if (is_array($this->teams)) {
+            return $this->teams;
+        }
+
+        global $post;
+
+        $team_meta = \get_post_meta($post->ID, 'cf1971_contests.teams', true);
+        $this->teams = $team_meta ? json_decode($team_meta) : [];
+
+        return $this->teams;
+    }
+
+    private function getTeamScores()
+    {
+        if (is_array($this->team_scores)) {
+            return $this->team_scores;
+        }
+
+        global $post;
+
+        $scores_meta = \get_post_meta($post->ID, 'cf1971_contests.team_scores', true);
+        $this->team_scores = $scores_meta ? json_decode($scores_meta) : [];
+
+        return $this->team_scores;
+    }
+
     public function workoutsMetaBox($object)
     {
-        $workouts_meta = \get_post_meta($object->ID, 'cf1971_contests.workouts', true);
-        $workouts = $workouts_meta ? json_decode($workouts_meta) : [];
         \wp_nonce_field('cf1971_contests_workouts_meta', 'cf1971_contests_workouts_meta_nonce');
         ?>
 
         <div class="cf1971-admin-workouts">
             <p>Publish or Update this Contest before editing the leaderboards below.</p>
             <ul class="cf1971-workouts-list">
-                <?php foreach ($workouts as $workout): ?>
+                <?php foreach ($this->getWorkouts() as $workout): ?>
                     <li>
                         <input type="hidden" value="<?= $workout ?>" name="workouts[]">
                         <label><?= $workout; ?></label>
-                        <span style="float: right;">
-                            [<a class="cf1971-workout-delete" href="javascript:;">&times;</a>]
-                        </span>
+                        <?php $this->deleteButton(); ?>
                     </li>
                 <?php endforeach; ?>
             </ul>
@@ -149,9 +195,40 @@ class Admin
 
         <div class="cf1971-admin-leaderboards">
             <p>Make sure the Workouts above are populated and finalised.</p>
+            <table class="cf1971-leaderboards">
+                <thead>
+                    <tr>
+                        <th>Team Name</th>
+                        <?php foreach ($this->getWorkouts() as $workout): ?>
+                        <th><?= $workout; ?></th>
+                        <?php endforeach; ?>
+                        <th><!-- Heading for Delete --></th>
+                    </tr>
+                </thead>
+                <tbody class="cf1971-leaderboards-body">
+                    <?php foreach ($this->getTeams() as $i => $team): ?>
+                    <tr>
+                        <td>
+                            <input type="hidden" value="<?= $team; ?>" name="teams[]">
+                            <label><?= $team; ?></label>
+                        </td>
+                        <?php foreach ($this->getWorkouts() as $j => $workout): ?>
+                        <td>
+                            <input class="cf1971-team-score" placeholder="Enter Score" type="text" name="team_scores[<?=
+                                $j;
+                            ?>][]" value="<?= $this->getTeamScores()[$j][$i] ?>">
+                        </td>
+                        <?php endforeach; ?>
+                        <td>
+                            <?php $this->deleteButton(); ?>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
             <div class="cf1971-team-create">
-                <input type="text" name="cf1971-workout-new" placeholder="Team Name">
-                <button class="cf1971-workout-add" type="button">Add Team</button>
+                <input type="text" name="cf1971-team-new" placeholder="Team Name">
+                <button class="cf1971-team-add" type="button">Add Team</button>
             </div>
         </div>
 
@@ -208,6 +285,27 @@ class Admin
         if (!$this->savePreChecks($post_id, $post, 'leaderboards')) {
             return $post_id;
         }
+
+        if (!isset($_POST['teams'])) {
+            \delete_post_meta($post_id, 'cf1971_contests.teams');
+            \delete_post_meta($post_id, 'cf1971_contests.team_scores');
+            return $post_id;
+        }
+
+        $teams = $_POST['teams'];
+        $team_scores = $_POST['team_scores'];
+
+        if (!is_array($_POST['teams'])) {
+            \delete_post_meta($post_id, 'cf1971_contests.teams');
+            \delete_post_meta($post_id, 'cf1971_contests.team_scores');
+            return $post_id;
+        }
+
+        $teams = json_encode($teams);
+        $team_scores = json_encode($team_scores);
+
+        \update_post_meta($post_id, 'cf1971_contests.teams', $teams);
+        \update_post_meta($post_id, 'cf1971_contests.team_scores', $team_scores);
     }
 
     private function savePreChecks($post_id, $post, $box)
@@ -225,5 +323,14 @@ class Admin
         }
 
         return true;
+    }
+
+    private function deleteButton()
+    {
+        ?>
+        <span style="float: right;">
+            [<a class="cf1971-delete" href="javascript:;">&times;</a>]
+        </span>
+        <?php
     }
 }
