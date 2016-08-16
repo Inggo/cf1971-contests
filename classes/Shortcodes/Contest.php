@@ -101,7 +101,19 @@ class Contest
 
         ?>
         <div class="cf1971-contest-form">
-            Form Goes Here
+            <h2>Please sign up below to register your team!</h2>
+            <form id="cf1971-contest-registration-form" method="POST" action="<?= admin_url('admin-ajax.php'); ?>">
+                <input type="hidden" name="action" value="cf1971-submit-form">
+                <input type="text" name="first_name" placeholder="Your First Name">
+                <input type="text" name="last_name" placeholder="Your Last Name">
+                <input type="email" name="email_address" placeholder="Your Email Address">
+                <input type="text" name="affiliate_name" placeholder="Your Affiliate Name">
+                <input type="text" name="team_name" placeholder="Your Team Name">
+                <button type="submit">Sign Up</button>
+                <?php if ($this->getSetting('paypal_email')): ?>
+                <p>Note: You will be redirected to PayPal after completing the form below</p>
+                <?php endif; ?>
+            </form>
         </div>
         <?php
     }
