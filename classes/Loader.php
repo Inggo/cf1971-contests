@@ -19,7 +19,6 @@ class Loader
         }
 
         \add_action('init', [$this, 'registerContestsCPT']);
-        \add_action('init', [$this, 'registerContestantsCPT']);
 
         $this->admin = new Admin;
         $this->shortcodes[] = new Shortcodes\Contest;
@@ -36,20 +35,6 @@ class Loader
             'has_archive' => false,
             'capability_type' => 'page',
             'supports' => ['title', 'editor', 'thumbnail', 'revisions'],
-        ]);
-    }
-
-    public function registerContestantsCPT()
-    {
-        \register_post_type('cf1971_contestants', [
-            'labels' => [
-                'name' => \__('Contestants', 'cf1971-contests'),
-                'singular_name' => \__('Contestant', 'cf1971-contests'),
-            ],
-            'public' => true,
-            'has_archive' => false,
-            'capability_type' => 'page',
-            'supports' => ['title', 'thumbnail', 'revisions'],
         ]);
     }
 }
