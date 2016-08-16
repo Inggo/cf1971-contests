@@ -28,13 +28,24 @@ class Loader
     {
         \register_post_type('cf1971_contests', [
             'labels' => [
-                'name' => \__('Contests', 'cf1971-contests'),
-                'singular_name' => \__('Contest', 'cf1971-contests'),
+                'name'               => \__('Contests', 'cf1971-contests'),
+                'singular_name'      => \__('Contest', 'cf1971-contests'),
+                'add_new_item'       => \__('Add New Contest', 'cf1971-contests'),
+                'edit_item'          => \__('Edit Contest', 'cf1971-contests'),
+                'new_item'           => \__('New Contest', 'cf1971-contests'),
+                'view_item'          => \__('View Contest', 'cf1971-contests'),
+                'search_items'       => \__('Search Contest', 'cf1971-contests'),
+                'not_found'          => \__('No contests found', 'cf1971-contests'),
+                'not_found_in_trash' => \__('No contests found in Trash', 'cf1971-contests'),
+                'all_items'          => \__('All Contests', 'cf1971-contests'),
             ],
             'public' => true,
             'has_archive' => false,
             'capability_type' => 'page',
             'supports' => ['title', 'editor', 'thumbnail', 'revisions'],
+            'rewrite' => [
+                'slug' => 'contests',
+            ],
         ]);
     }
 }

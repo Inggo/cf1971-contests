@@ -11,12 +11,14 @@ class Admin
     private $settings = [
         'show_form' => 'checkbox',
         'show_leaderboards' => 'checkbox',
+        'contact_email' => 'email',
         'paypal_email' => 'email',
     ];
 
     private $labels = [
         'show_form' => 'Show Registration Form?',
         'show_leaderboards' => 'Show Leaderboards?',
+        'contact_email' => 'Contact Email Address',
         'paypal_email' => 'PayPal Email Address',
     ];
 
@@ -60,6 +62,7 @@ class Admin
         <div class="cf1971-admin-settings">
             <?= $this->getSettingView('show_form', $object); ?>
             <?= $this->getSettingView('show_leaderboards', $object); ?>
+            <?= $this->getSettingView('contact_email', $object); ?>
             <?= $this->getSettingView('paypal_email', $object); ?>
         </div>
 
@@ -208,10 +211,12 @@ class Admin
 
         $show_form = isset($_POST['show_form']) && intval($_POST['show_form']) === 1;
         $show_leaderboards = isset($_POST['show_leaderboards']) && intval($_POST['show_leaderboards']) === 1;
+        $contact_email = isset($_POST['contact_email']) ? \sanitize_email($_POST['contact_email']) : '';
         $paypal_email = isset($_POST['paypal_email']) ? \sanitize_email($_POST['paypal_email']) : '';
 
         \update_post_meta($post_id, 'cf1971_contests.show_form', $show_form);
         \update_post_meta($post_id, 'cf1971_contests.show_leaderboards', $show_leaderboards);
+        \update_post_meta($post_id, 'cf1971_contests.contact_email', $paypal_email);
         \update_post_meta($post_id, 'cf1971_contests.paypal_email', $paypal_email);
     }
 
