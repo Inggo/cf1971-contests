@@ -6,6 +6,10 @@ class Loader
 {
     public function __construct($plugin_dir)
     {
+        if (!trait_exists('Inggo\CF1971\Contests\Traits\GetsMetaData')) {
+            require_once($plugin_dir . 'classes/Traits/GetsMetaData.php');
+        }
+
         if (!class_exists('Inggo\CF1971\Contests\Admin')) {
             require_once($plugin_dir . 'classes/Admin.php');
         }
