@@ -139,7 +139,27 @@ class Contest
 
         ?>
         <div class="cf1971-contest-leaderboards">
-            Leaderboards Goes Here
+            <h2>Leaderboards</h2>
+            <table class="cf1971-leaderboards">
+                <thead>
+                    <tr>
+                        <th>Team Name</th>
+                        <?php foreach ($this->getWorkouts() as $workout) : ?>
+                        <th><?= $workout; ?></th>
+                        <?php endforeach; ?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->getTeams() as $i => $team) : ?>
+                    <tr>
+                        <td><?= $team; ?></td>
+                        <?php foreach ($this->getWorkouts() as $j => $score): ?>
+                        <td><?= $this->getTeamScores()[$j][$i]; ?></td>
+                        <?php endforeach; ?>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
         <?php
     }
