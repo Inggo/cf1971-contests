@@ -8,6 +8,21 @@ trait GetsMetaData
     private $teams = null;
     private $team_scores = null;
 
+    private $setting_values = [];
+
+    private function getSetting($setting)
+    {
+        if (array_key_exists($setting, $this->setting_values)) {
+            return $this->setting_values[$setting];
+        }
+
+        global $post;
+
+        $this->setting_values[$setting] = \get_post_meta($post->ID, 'cf1971_contests.' . $setting, true);
+
+        return $this->setting_values[$setting];
+    }
+
     private function getWorkouts()
     {
         if (is_array($this->workouts)) {

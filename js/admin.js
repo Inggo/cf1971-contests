@@ -64,6 +64,8 @@
       $tr.append('<td>' + deleteButton() + '</td>');
 
       $('.cf1971-leaderboards-body').append($tr);
+
+      $('input[name="cf1971-team-new"]').val('');
     });
 
     // Remove Team form Leaderboard
