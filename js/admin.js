@@ -15,6 +15,10 @@
 
       var val = $('input[name="cf1971-workout-new"]').val();
 
+      if (!val) {
+        return;
+      }
+
       $('.cf1971-workouts-list').append('<li>' +
           '<input type="hidden" value="' + val + '" name="workouts[]"> ' +
           '<label>' + val + '</label> ' +
