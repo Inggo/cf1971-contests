@@ -5,14 +5,14 @@
  * Description: Enable contests for CrossFit 1971 website.
  * Author: Inggo Espinosa
  * Author URI: https://inggo.xyz/
- * Version: 0.1.2
+ * Version: 0.1.3
  * License: GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 define('CF1971_CONTESTS_DIR', plugin_dir_path(__FILE__));
 define('CF1971_CONTESTS_URL', plugin_dir_url(__FILE__));
-define('CF1971_CONTEST_VERSION', '0.1.2');
+define('CF1971_CONTEST_VERSION', '0.1.3');
 
 if (!class_exists('Inggo\CF1971\Contests\Loader')) {
     require_once(CF1971_CONTESTS_DIR . 'classes/Loader.php');
