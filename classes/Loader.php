@@ -18,10 +18,15 @@ class Loader
             require_once($plugin_dir . 'classes/Shortcodes/Contest.php');
         }
 
+        if (!class_exists('Inggo\CF1971\Contests\FormProcessor')) {
+            require_once($plugin_dir . 'classes/FormProcessor.php');
+        }
+
         \add_action('init', [$this, 'registerContestsCPT']);
 
         $this->admin = new Admin;
         $this->shortcodes[] = new Shortcodes\Contest;
+        $this->form_processor = new FormProcessor;
     }
 
     public function registerContestsCPT()

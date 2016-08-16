@@ -9,6 +9,8 @@ class Contest
     use GetsMetaData;
 
     private $id = null;
+    private $default_value = '45.00';
+    private $default_currency = 'GBP';
 
     public $initialized = false;
 
@@ -103,17 +105,31 @@ class Contest
         <div class="cf1971-contest-form">
             <h2>Please sign up below to register your team!</h2>
             <form id="cf1971-contest-registration-form" method="POST" action="<?= admin_url('admin-ajax.php'); ?>">
-                <input type="hidden" name="action" value="cf1971-submit-form">
-                <input type="text" name="first_name" placeholder="Your First Name">
-                <input type="text" name="last_name" placeholder="Your Last Name">
-                <input type="email" name="email_address" placeholder="Your Email Address">
-                <input type="text" name="affiliate_name" placeholder="Your Affiliate Name">
-                <input type="text" name="team_name" placeholder="Your Team Name">
+                <?php wp_nonce_field('cf1971_submit_form'); ?>
+                <input type="hidden" name="action" value="cf1971_submit_form">
+                <input type="hidden" name="contest_id" value="<?= \esc_attr(\get_the_ID()) ?>">
+                <input required type="text" name="first_name" placeholder="Your First Name">
+                <input required type="text" name="last_name" placeholder="Your Last Name">
+                <input required type="email" name="email_address" placeholder="Your Email Address">
+                <input required type="text" name="affiliate_name" placeholder="Your Affiliate Name">
+                <input required type="text" name="team_name" placeholder="Your Team Name">
                 <button type="submit">Sign Up</button>
-                <?php if ($this->getSetting('paypal_email')): ?>
-                <p>Note: You will be redirected to PayPal after completing the form below</p>
-                <?php endif; ?>
             </form>
+            <?php if ($this->getSetting('paypal_email') && \is_email($this->getSetting('paypal_email'))): ?>
+            <p>Note: You will be redirected to PayPal after completing the form below</p>
+            <form id="cf1971-payment" action="https://www.paypal.com/cgi-bin/webscr" method="POST">
+                <input type="hidden" name="cmd" value="_xclick">
+                <input type="hidden" name="business" value="<?= $this->getSetting('paypal_email'); ?>"
+                <input type="hidden" name="charset" value="utf-8">
+                <input type="hidden" name="return" value="<?= $_SERVER['REQUEST_URI']; ?>">
+                <input type="hidden" name="currency_code" value="<?= $this->getSetting('paypal_currency') ?: $this->default_currency; ?>">
+                <input type="hidden" name="amount" value="<?= $this->getSetting('paypal_amount') ?: $this->default_value; ?>">
+                <input type="hidden" name="item_name" value="Registration for <?= \esc_attr(\get_the_title()) ?>">
+                <input type="hidden" name="<first_name>" value="">
+                <input type="hidden" name="<last_name>" value="">
+                <input type="hidden" name="<email>" value="">
+            </form>
+            <?php endif; ?>
         </div>
         <?php
     }

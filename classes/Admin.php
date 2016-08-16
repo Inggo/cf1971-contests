@@ -13,6 +13,8 @@ class Admin
         'show_leaderboards' => 'checkbox',
         'contact_email' => 'email',
         'paypal_email' => 'email',
+        'paypal_currency' => 'currency',
+        'paypal_amount' => 'amount'
     ];
 
     private $labels = [
@@ -20,6 +22,8 @@ class Admin
         'show_leaderboards' => 'Show Leaderboards?',
         'contact_email' => 'Contact Email Address',
         'paypal_email' => 'PayPal Email Address',
+        'paypal_currency' => 'Currency Code',
+        'paypal_amount' => 'Price'
     ];
 
     public function __construct()
@@ -105,10 +109,9 @@ class Admin
         ?>
 
         <div class="cf1971-admin-settings">
-            <?= $this->getSettingView('show_form', $object); ?>
-            <?= $this->getSettingView('show_leaderboards', $object); ?>
-            <?= $this->getSettingView('contact_email', $object); ?>
-            <?= $this->getSettingView('paypal_email', $object); ?>
+            <?php foreach ($this->settings as $setting => $type): ?>
+                <?= $this->getSettingView($setting, $object); ?>
+            <?php endforeach; ?>
         </div>
 
         <?php
@@ -129,6 +132,20 @@ class Admin
             case 'email':
                 ?>
                 <input type="email" <?= $this->settingsCommonAttr($setting); ?> value="<?=
+                    \esc_attr(\get_post_meta($object->ID, 'cf1971_contests.' . $setting, true));
+                ?>">
+                <?php
+                break;
+            case 'currency':
+                ?>
+                <input type="text" placeholder="GBP" <?= $this->settingsCommonAttr($setting); ?> value="<?=
+                    \esc_attr(\get_post_meta($object->ID, 'cf1971_contests.' . $setting, true));
+                ?>">
+                <?php
+                break;
+            case 'amount':
+                ?>
+                <input type="number" step="0.01" min="0" placeholder="45.00" <?= $this->settingsCommonAttr($setting); ?> value="<?=
                     \esc_attr(\get_post_meta($object->ID, 'cf1971_contests.' . $setting, true));
                 ?>">
                 <?php
@@ -258,11 +275,15 @@ class Admin
         $show_leaderboards = isset($_POST['show_leaderboards']) && intval($_POST['show_leaderboards']) === 1;
         $contact_email = isset($_POST['contact_email']) ? \sanitize_email($_POST['contact_email']) : '';
         $paypal_email = isset($_POST['paypal_email']) ? \sanitize_email($_POST['paypal_email']) : '';
+        $paypal_currency = isset($_POST['paypal_currency']) ? \sanitize_text_field($_POST['paypal_currency']) : '';
+        $paypal_amount = isset($_POST['paypal_amount']) ? \sanitize_text_field($_POST['paypal_amount']) : '';
 
         \update_post_meta($post_id, 'cf1971_contests.show_form', $show_form);
         \update_post_meta($post_id, 'cf1971_contests.show_leaderboards', $show_leaderboards);
-        \update_post_meta($post_id, 'cf1971_contests.contact_email', $paypal_email);
+        \update_post_meta($post_id, 'cf1971_contests.contact_email', $contact_email);
         \update_post_meta($post_id, 'cf1971_contests.paypal_email', $paypal_email);
+        \update_post_meta($post_id, 'cf1971_contests.paypal_currency', $paypal_currency);
+        \update_post_meta($post_id, 'cf1971_contests.paypal_amount', $paypal_amount);
     }
 
     private function saveWorkoutsData($post_id, $post, $update)
