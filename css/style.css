@@ -1,0 +1,54 @@
+.cf1971-contest-logo img {
+    display: block;
+    margin: 0 auto;
+}
+
+.cf1971-contest-logo {
+    margin: 0 0 12px;
+}
+
+.cf1971-contest-info {
+    margin: 36px 0;
+}
+
+.cf1971-contest-contents p {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.cf1971-contest-form input {
+    width: 100%;
+    padding: 15px 20px;
+    border-radius: 3px;
+    font-size: 16px;
+    margin-bottom: 12px;
+    border: 1px solid rgb(229, 229, 229);
+}
+
+.cf1971-contest-form input:focus {
+    border-color: rgb(160, 160, 160);
+}
+
+.cf1971-contest-form button {
+    background: #1fce6d;
+    border: none;
+    border-radius: 3px;
+    padding: 14px 24px;
+    font-size: 16px;
+    color: #fff;
+    font-weight: bold;
+    width: 50%;
+}
+
+.cf1971-contest-form {
+    margin: 0 0 12px;
+}
+
+.cf1971-contest-form p {
+    margin: 12px 0;
+    color: red;
+}
+
+.leaderboard-container {
+    overflow: scroll;
+}

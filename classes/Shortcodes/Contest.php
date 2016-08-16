@@ -89,8 +89,10 @@ class Contest
     public function renderContent()
     {
         ?>
-        <div class="cf1971-contest-content">
-            <?php the_content(); ?>
+        <div class="cf1971-contest-info">
+            <h1 class="cf1971-contest-title"><?php the_title(); ?></h1>
+            <div class="cf1971-contest-logo"><?php the_post_thumbnail(); ?></div>
+            <div class="cf1971-contest-contents"><?php the_content(); ?></div>
         </div>
         <?php
     }
@@ -116,7 +118,7 @@ class Contest
                 <button type="submit">Sign Up</button>
             </form>
             <?php if ($this->getSetting('paypal_email') && \is_email($this->getSetting('paypal_email'))): ?>
-            <p>Note: You will be redirected to PayPal after completing the form below</p>
+            <p>Note: You will be redirected to PayPal after completing the form above.</p>
             <form id="cf1971-payment" action="https://www.paypal.com/cgi-bin/webscr" method="POST">
                 <input type="hidden" name="cmd" value="_xclick">
                 <input type="hidden" name="business" value="<?= $this->getSetting('paypal_email'); ?>"
@@ -140,26 +142,28 @@ class Contest
         ?>
         <div class="cf1971-contest-leaderboards">
             <h2>Leaderboards</h2>
-            <table class="cf1971-leaderboards">
-                <thead>
-                    <tr>
-                        <th>Team Name</th>
-                        <?php foreach ($this->getWorkouts() as $workout) : ?>
-                        <th><?= $workout; ?></th>
+            <div class="cf1971-leaderboard-container">
+                <table class="cf1971-leaderboards">
+                    <thead>
+                        <tr>
+                            <th>Team Name</th>
+                            <?php foreach ($this->getWorkouts() as $workout) : ?>
+                            <th><?= $workout; ?></th>
+                            <?php endforeach; ?>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($this->getTeams() as $i => $team) : ?>
+                        <tr>
+                            <td><?= $team; ?></td>
+                            <?php foreach ($this->getWorkouts() as $j => $score): ?>
+                            <td><?= $this->getTeamScores()[$j][$i]; ?></td>
+                            <?php endforeach; ?>
+                        </tr>
                         <?php endforeach; ?>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($this->getTeams() as $i => $team) : ?>
-                    <tr>
-                        <td><?= $team; ?></td>
-                        <?php foreach ($this->getWorkouts() as $j => $score): ?>
-                        <td><?= $this->getTeamScores()[$j][$i]; ?></td>
-                        <?php endforeach; ?>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <?php
     }
