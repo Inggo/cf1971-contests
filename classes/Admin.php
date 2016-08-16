@@ -4,6 +4,18 @@ namespace Inggo\CF1971\Contests;
 
 class Admin
 {
+    private $settings = [
+        'show_form' => 'checkbox',
+        'show_leaderboards' => 'checkbox',
+        'paypal_email' => 'email',
+    ];
+
+    private $labels = [
+        'show_form' => 'Show Registration Form?',
+        'show_leaderboards' => 'Show Leaderboards?',
+        'paypal_email' => 'PayPal Email Address',
+    ];
+
     public function __construct()
     {
         \add_action('add_meta_boxes', [$this, 'addMetaBoxes']);
@@ -27,8 +39,77 @@ class Admin
 
     public function addMetaBoxes()
     {
+        \add_meta_box('cf1971-contests-settings-meta', 'Contest Settings', [$this, 'settingsMetaBox'], 'cf1971_contests');
         \add_meta_box('cf1971-contests-workouts-meta', 'Workouts', [$this, 'workoutsMetaBox'], 'cf1971_contests');
         \add_meta_box('cf1971-contests-leaderboards-meta', 'Leaderboards', [$this, 'leaderboardsMetaBox'], 'cf1971_contests');
+    }
+
+    public function settingsMetaBox($object)
+    {
+        \wp_nonce_field('cf1971_contests_settings_meta', 'cf1971_contests_settings_meta_nonce');
+        ?>
+
+        <div class="cf1971-admin-settings">
+            <?= $this->getSettingView('show_form', $object); ?>
+            <?= $this->getSettingView('show_leaderboards', $object); ?>
+            <?= $this->getSettingView('paypal_email', $object); ?>
+        </div>
+
+        <?php
+    }
+
+    private function getSettingView($setting, $object)
+    {
+        $this->settingsCommonPre($setting);
+
+        switch ($this->settings[$setting]) {
+            case 'checkbox':
+            ?>
+                <input type="checkbox" <?= $this->settingsCommonAttr($setting); ?> <?=
+                    \get_post_meta($object->ID, 'cf1971_contests.' . $setting, true) ? 'checked' : '';
+                ?>>
+            <?php
+                break;
+            case 'email':
+                ?>
+                <input type="email" <?= $this->settingsCommonAttr($setting); ?> value="<?=
+                    \esc_attr(\get_post_meta($object->ID, 'cf1971_contests.' . $setting, true));
+                ?>">
+                <?php
+                break;
+            default:
+            ?>
+                <input type="text" <?= $this->settingsCommonAttr($setting); ?> value="<?=
+                    \esc_attr(\get_post_meta($object->ID, 'cf1971_contests.' . $setting, true));
+                ?>">
+            <?php
+        }
+
+        $this->settingsCommonPost();
+    }
+
+    private function settingsCommonPre($setting)
+    {
+        ?>
+        <div class="cf1971-admin-settings-field cf1971-admin-settings-<?= $setting; ?>">
+            <label class="cf1971-admin-settings-label" for="cf1971-settings-<?= $setting; ?>"><?=
+                $this->labels[$setting];
+            ?></label>
+            <div class="cf1971-admin-settings-control">
+        <?php
+    }
+
+    private function settingsCommonPost()
+    {
+        ?>
+            </div>
+        </div>
+        <?php
+    }
+
+    private function settingsCommonAttr($setting)
+    {
+        return ' id="cf1971-settings-' . \esc_attr($setting) . '" name="' . \esc_attr($setting) . '" ';
     }
 
     public function workoutsMetaBox($object)
@@ -55,11 +136,8 @@ class Admin
         \wp_nonce_field('cf1971_contests_leaderboards_meta', 'cf1971_contests_leaderboards_meta_nonce');
         ?>
 
-        <div class="cf1971-admin-workouts">
-            <ul class="cf1971-workouts-list">
-                
-            </ul>
-            <div class="cf1971-workouts-create">
+        <div class="cf1971-admin-leaderboards">
+            <div class="cf1971-team-create">
                 <input type="text" name="cf1971-workout-new" placeholder="Team Name">
                 <button class="cf1971-workout-add" type="button">Add Team</button>
             </div>

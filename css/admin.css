@@ -11,3 +11,16 @@
     cursor: move;
     background: white;
 }
+
+.cf1971-admin-settings-field {
+    padding: 5px 5px 5px 160px;
+}
+
+.cf1971-admin-settings-label {
+    float: left;
+    margin: 0 0 0 -160px;
+}
+
+.cf1971-admin-settings-control input[type="email"] {
+    width: 100%;
+}
