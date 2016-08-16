@@ -115,13 +115,23 @@ class Admin
 
     public function workoutsMetaBox($object)
     {
+        $workouts_meta = \get_post_meta($object->ID, 'cf1971_contests.workouts', true);
+        $workouts = $workouts_meta ? json_decode($workouts_meta) : [];
         \wp_nonce_field('cf1971_contests_workouts_meta', 'cf1971_contests_workouts_meta_nonce');
         ?>
 
         <div class="cf1971-admin-workouts">
             <p>Publish or Update this Contest before editing the leaderboards below.</p>
             <ul class="cf1971-workouts-list">
-                
+                <?php foreach ($workouts as $workout): ?>
+                    <li>
+                        <input type="hidden" value="<?= $workout ?>" name="workouts[]">
+                        <label><?= $workout; ?></label>
+                        <span style="float: right;">
+                            [<a class="cf1971-workout-delete" href="javascript:;">&times;</a>]
+                        </span>
+                    </li>
+                <?php endforeach; ?>
             </ul>
             <div class="cf1971-workouts-create">
                 <input type="text" name="cf1971-workout-new" placeholder="Workout Name">
@@ -175,6 +185,22 @@ class Admin
         if (!$this->savePreChecks($post_id, $post, 'workouts')) {
             return $post_id;
         }
+
+        if (!isset($_POST['workouts'])) {
+            \delete_post_meta($post_id, 'cf1971_contests.workouts');
+            return $post_id;
+        }
+
+        $workouts = $_POST['workouts'];
+
+        if (!is_array($_POST['workouts'])) {
+            \delete_post_meta($post_id, 'cf1971_contests.workouts');
+            return $post_id;
+        }
+
+        $workouts = json_encode($workouts);
+
+        \update_post_meta($post_id, 'cf1971_contests.workouts', $workouts);
     }
 
     private function saveLeaderboardsData($post_id, $post, $update)

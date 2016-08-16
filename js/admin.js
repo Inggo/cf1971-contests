@@ -3,7 +3,7 @@
 
     // Delete button helper function
     var deleteButton = function () {
-      return '[<a class="cf1971-workout-delete" href="javascript:;">&times;</a>]';
+      return '<span style="float: right;">[<a class="cf1971-workout-delete" href="javascript:;">&times;</a>]</span>';
     };
 
     // Make Workouts List sortable
