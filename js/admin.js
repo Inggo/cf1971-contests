@@ -9,6 +9,15 @@
     // Make Workouts List sortable
     $('.cf1971-workouts-list').sortable();
 
+    // Hitting enter should do a click event of a nearby button
+    $('.cf1971-workout-new,.cf1971-team-new').keydown(function (e){
+      if (e.keyCode == 13) {
+        e.preventDefault();
+        $(this).next('button').click();
+        return false;
+      }
+    });
+
     // Add new Workout to list
     $('.cf1971-admin-workouts').on('click', '.cf1971-workout-add', function (e) {
       e.preventDefault();
