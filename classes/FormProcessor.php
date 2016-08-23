@@ -11,6 +11,7 @@ class FormProcessor
     public function __construct()
     {
         add_action('wp_ajax_cf1971_submit_form', [$this, 'process']);
+        add_action('wp_ajax_nopriv_cf1971_submit_form', [$this, 'process']);
     }
 
     public function process()
