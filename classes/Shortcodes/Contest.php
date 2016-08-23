@@ -90,7 +90,6 @@ class Contest
     {
         ?>
         <div class="cf1971-contest-info">
-            <h1 class="cf1971-contest-title"><?php the_title(); ?></h1>
             <div class="cf1971-contest-logo"><?php the_post_thumbnail(); ?></div>
             <div class="cf1971-contest-contents"><?php the_content(); ?></div>
         </div>

@@ -61,6 +61,14 @@
     width: 100%;
 }
 
+.cf1971-contest-logo img {
+    margin-bottom: 24px;
+}
+
+.cf1971-contest-contents h2 {
+    margin-bottom: 24px;
+}
+
 @media screen and (min-width: 768px) {
     .cf1971-contest-container {
         overflow: hidden;
@@ -81,19 +89,32 @@
         padding-left: 24px;
     }
 
-    .cf1971-contest-title {
-        padding-right: 24px;
+    .cf1971-leaderboard-container {
+        overflow-x: auto;
     }
 
     .cf1971-contest-logo {
-        padding-right: 24px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: .15;
     }
 
-    .cf1971-contest-contents {
-        padding-right: 24px;
+    .cf1971-contest-info {
+        position: relative;
+        min-height: 720px;
+        padding: 12px;
     }
 
-    .cf1971-leaderboard-container {
-        overflow-x: auto;
+    .cf1971-contest-logo img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: auto;
     }
 }
